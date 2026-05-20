@@ -286,7 +286,7 @@ export default function Dashboard({
               
                 {SOUND_DEFINITIONS.map((sound) => {
                   const isActive = activeSounds.includes(sound.id);
-                  const currentVol = audioEngine.getSoundVolume(sound.id);
+                  const currentVol = 0.8;
                   const activePeeps = getGlobalSoundPlayers(sound.id);
 
 
