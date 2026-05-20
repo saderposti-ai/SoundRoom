@@ -284,9 +284,6 @@ export default function Dashboard({
               {/* SOUND GRID */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-sans text-gray-500 dark:text-white leading-relaxed max-w-md">
-                  Enable and layer multiple ambient channels. Each sound is generated procedurally in your browser to match the room atmosphere.
-                </p>
                 {activeSounds.length > 0 && (
                   <button
                     onClick={onClearAll}
