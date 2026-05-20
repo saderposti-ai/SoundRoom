@@ -357,17 +357,17 @@ export default function Dashboard({
 
                           <button
                             onClick={() => onSoundToggle(sound.id, !isActive)}
-                            className={`relative w-11 h-6 rounded-full cursor-pointer transition-colors duration-200 focus:outline-none border ${
+                            className={`relative w-[44px] h-[24px] rounded-full transition-all duration-300 border ${
                               isActive
-                                ? 'bg-[var(--theme-accent)] border-[var(--theme-accent)] shadow-inner'
-                                : 'bg-gray-300/80 border-black/10 dark:bg-neutral-800 dark:border-white/20 hover:border-[var(--theme-accent)]/50'
+                                ? 'bg-[var(--theme-accent)] border-[var(--theme-accent)]'
+                                : 'bg-gray-300 dark:bg-neutral-700 border-black/10 dark:border-white/20'
                             }`}
                             aria-label={`Toggle ${sound.label}`}
                           >
                             <motion.div
-                              className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow"
+                              className="absolute top-[1px] left-[1px] w-[20px] h-[20px] rounded-full bg-white shadow-md"
                               animate={{
-                                left: isActive ? '22px' : '2px'
+                                x: isActive ? 20 : 0
                               }}
                               transition={{
                                 type: 'spring',
