@@ -257,5 +257,19 @@
   transform: scale(1.22);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), 0 0 12px var(--theme-accent, #3b82f6);
 }
+/* FORCE LIGHT MODE EVERYWHERE */
+html {
+  color-scheme: light;
+}
+
+body {
+  background: #d7ebfa;
+  color: #111827;
+}
+
+/* Disable all dark mode Tailwind styles */
+.dark {
+  color-scheme: light;
+}
 
 

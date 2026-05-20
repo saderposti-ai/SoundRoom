@@ -151,15 +151,15 @@ export default function Dashboard({
       {/* ----------------- UPPER COMPACT FLOAT DECK ----------------- */}
       <header className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-3xl mb-6 backdrop-blur-xl bg-[var(--theme-card-bg)] border border-[var(--theme-card-border)] shadow-lg select-none theme-transition" style={{ boxShadow: 'var(--theme-glow)' }}>
         <div className="flex items-center space-x-3.5">
-          <div className="p-2.5 rounded-2xl bg-gray-900/5 dark:bg-white/8 text-gray-800 dark:text-white border border-transparent dark:border-white/10">
+          <div className="p-2.5 rounded-2xl bg-white/60 text-gray-800 border border-gray-200">
             <Radio className="w-5 h-5 animate-pulse text-[var(--theme-accent)]" />
           </div>
           <div>
-            <h1 className="text-xl font-bold font-sans tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
+            <h1 className="text-xl font-bold font-sans tracking-tight text-gray-900 flex items-center gap-2">
               <span>Room Noise</span>
               <span className="text-base select-none">{getDominantVibeSymbol()}</span>
             </h1>
-            <p className="text-[11px] font-mono text-gray-550 dark:text-stone-100 uppercase tracking-widest">
+            <p className="text-[11px] font-mono text-gray-500 uppercase tracking-widest">
               Personal ambient soundscape
             </p>
           </div>
@@ -167,10 +167,10 @@ export default function Dashboard({
 
         {/* Master Controls & Theme Switcher */}
         <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
-          <div className="flex items-center space-x-2 bg-black/5 dark:bg-white/10 px-4 py-2.5 rounded-2xl border border-black/5 dark:border-white/15">
+          <div className="flex items-center space-x-2 bg-white/60 px-4 py-2.5 rounded-2xl border border-gray-200">
             <button
               onClick={toggleMasterMute}
-              className="text-gray-600 dark:text-white hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
               aria-label="Mute soundscape"
             >
               {isMuted || masterVolume === 0 ? <VolumeX className="w-4.5 h-4.5 text-red-500" /> : <Volume2 className="w-4.5 h-4.5 text-[var(--theme-accent)]" />}
@@ -196,13 +196,13 @@ export default function Dashboard({
       <main className="rounded-3xl backdrop-blur-3xl bg-[var(--theme-card-bg)] border border-[var(--theme-card-border)] shadow-2xl overflow-hidden theme-transition" style={{ boxShadow: 'var(--theme-glow)' }}>
         
         {/* Navigation Sub-Tabs */}
-        <nav className="flex border-b border-black/5 dark:border-white/10 bg-black/5 dark:bg-black/35">
+        <nav className="flex border-b border-gray-200 bg-gray-100/70">
           <button
             onClick={() => setActiveTab('sounds')}
             className={`flex-1 py-4 text-xs font-semibold uppercase tracking-widest font-sans flex items-center justify-center space-x-2 transition-all cursor-pointer ${
               activeTab === 'sounds'
-                ? 'text-gray-950 dark:text-white border-b-2 border-[var(--theme-accent)] font-bold'
-                : 'text-gray-500 dark:text-white/70 hover:text-gray-800 dark:hover:text-white'
+                ? 'text-gray-900 border-b-2 border-[var(--theme-accent)] font-bold'
+                : 'text-gray-500 hover:text-gray-800'
             }`}
           >
             <Sliders className="w-4 h-4 text-[var(--theme-accent)]" />
@@ -214,7 +214,7 @@ export default function Dashboard({
             className={`flex-1 py-4 text-xs font-semibold uppercase tracking-widest font-sans flex items-center justify-center space-x-2 transition-all cursor-pointer ${
               activeTab === 'themes'
                 ? 'text-gray-950 dark:text-white border-b-2 border-[var(--theme-accent)] font-bold'
-                : 'text-gray-500 dark:text-white/70 hover:text-gray-800 dark:hover:text-white'
+                : 'text-gray-500 hover:text-gray-800'
             }`}
           >
             <Flame className="w-4 h-4 text-[var(--theme-accent)] animate-pulse" />
@@ -233,7 +233,7 @@ export default function Dashboard({
               {/* TOP BAR */}
               <div className="flex items-center justify-between">
 
-                <p className="text-xs text-gray-500 dark:text-white max-w-md leading-relaxed">
+                <p className="text-xs text-gray-500 max-w-md leading-relaxed">
                   Enable and layer multiple ambient channels. Each sound is generated procedurally in your browser to match the room atmosphere.
                 </p>
 
@@ -277,7 +277,7 @@ export default function Dashboard({
                       className={`relative p-4 rounded-2xl border transition-all duration-300 flex flex-col justify-between ${
                         isActive
                            ? 'bg-[var(--theme-card-bg)] border-[var(--theme-accent)] scale-[1.01] theme-transition'
-                           : 'bg-black/5 border-black/5 dark:bg-white/[0.04] dark:border-white/10 hover:bg-black/8 dark:hover:bg-white/8 hover:border-[var(--theme-accent)]/30'
+                           : 'bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-[var(--theme-accent)]/30'
                       }`}
                       style={isActive ? { boxShadow: 'var(--theme-glow)' } : undefined}
                       whileHover={{ scale: 1.015 }}
@@ -325,7 +325,7 @@ export default function Dashboard({
                             className={`relative w-[44px] h-[24px] rounded-full transition-all duration-300 border ${
                               isActive
                                 ? 'bg-[var(--theme-accent)] border-[var(--theme-accent)]'
-                                : 'bg-gray-300 dark:bg-neutral-700 border-black/10 dark:border-white/20'
+                                : 'bg-gray-300 border-gray-300'
                             }`}
                             aria-label={`Toggle ${sound.label}`}
                           >
@@ -346,7 +346,7 @@ export default function Dashboard({
 
                       {/* Slider controls & statistics */}
                       {isActive && (
-                        <div className="mt-3 pt-3 border-t border-black/5 dark:border-white/10 flex items-center justify-between space-x-4 animate-fade-in">
+                        <div className="mt-3 pt-3 border-t border-gray-200 flex items-center justify-between space-x-4 animate-fade-in">
                           <div className="flex items-center space-x-2 flex-1">
                             <Volume2 className="w-3.5 h-3.5 text-[var(--theme-accent)] theme-transition" />
                             <input
@@ -389,13 +389,13 @@ export default function Dashboard({
           {activeTab === 'themes' && (
             <div className="space-y-6 animate-fade-in text-left">
               <div className="space-y-1">
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-1.5">
+                <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
                   <span>Atmosphere Vibe Controller</span>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--theme-accent)]/15 text-[var(--theme-accent)] font-mono uppercase tracking-wider theme-transition font-bold">
                     Theme Presets
                   </span>
                 </h3>
-                <p className="text-xs text-gray-400 dark:text-white leading-relaxed">
+                <p className="text-xs text-gray-500 leading-relaxed">
                   ChooChoose an atmospheric preset to customize the mood and lighting of your personal space.
                 </p>
               </div>
@@ -415,7 +415,7 @@ export default function Dashboard({
                       className={`p-4 rounded-2xl flex flex-col items-start text-left border transition-all duration-300 relative cursor-pointer group ${
                         isThemeSelected
                           ? 'bg-[var(--theme-card-bg)] border-[var(--theme-accent)] border-2 shadow-md translate-y-[-2px] theme-transition'
-                          : 'bg-black/5 border-black/5 dark:bg-white/[0.04] dark:border-white/10 text-gray-700 dark:text-white hover:bg-black/8 dark:hover:bg-white/8 hover:border-[var(--theme-accent)]/35'
+                          : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-[var(--theme-accent)]/35'
                       }`}
                       style={isThemeSelected ? { boxShadow: 'var(--theme-glow)' } : undefined}
                     >
@@ -428,7 +428,7 @@ export default function Dashboard({
                           )}
                         </div>
                       </div>
-                      <p className="text-[10px] text-gray-550 dark:text-white mt-2 leading-relaxed flex-1">
+                      <p className="text-[10px] text-gray-500 mt-2 leading-relaxed flex-1">
                         {theme.description}
                       </p>
                       {isThemeSelected && (
@@ -447,7 +447,7 @@ export default function Dashboard({
       </main>
 
       {/* Floating helpful user guide footer */}
-      <footer className="text-center mt-6 text-[11px] text-gray-400 dark:text-white hover:text-gray-500 dark:hover:text-white transition-colors font-sans select-none leading-relaxed">
+      <footer className="text-center mt-6 text-[11px] text-gray-400 hover:text-gray-500 transition-colors font-sans select-none leading-relaxed">
         Layer ambient sounds, adjust volumes, and create your perfect atmosphere.
       </footer>
     </div>
