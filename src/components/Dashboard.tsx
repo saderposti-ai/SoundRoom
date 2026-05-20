@@ -283,20 +283,7 @@ export default function Dashboard({
 
               {/* SOUND GRID */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center justify-between">
-                {activeSounds.length > 0 && (
-                  <button
-                    onClick={onClearAll}
-                    className="text-[10px] font-mono uppercase tracking-widest font-bold text-[#a855f7] hover:brightness-125 transition-all cursor-pointer dark:text-pink-400"
-                    style={{ color: 'var(--theme-accent)' }}
-                  >
-                    Clear All
-                  </button>
-                )}
-              </div>
-
-              {/* Categorized Audio Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
                 {SOUND_DEFINITIONS.map((sound) => {
                   const isActive = activeSounds.includes(sound.id);
                   const currentVol = audioEngine.getSoundVolume(sound.id);
