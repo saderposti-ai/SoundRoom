@@ -44,6 +44,7 @@ class AudioEngine {
 
   // Keep track of active intervals for scheduling events
   private schedulers: Record<string, number | NodeJS.Timeout> = {};
+  private isStoppingAll = false;
 
   constructor() {}
 
@@ -262,6 +263,7 @@ class AudioEngine {
   }
 
   public stopAll() {
+    this.isStoppingAll = true;
     // 1. Clear all intervals and timeouts
     Object.keys(this.schedulers).forEach((key) => {
       const scheduler = this.schedulers[key];
@@ -295,6 +297,9 @@ class AudioEngine {
           gainNode.disconnect();
         } catch (e) {}
         this.soundGains[id] = null;
+      setTimeout(() => {
+        this.isStoppingAll = false;
+      }, 100);
       }
     });
 
@@ -504,11 +509,11 @@ class AudioEngine {
     const now = this.ctx.currentTime;
     
     // Laptop chiclet keystroke clicks: lighter body resonance, snappy crisp plastic dome / scissor switch action
-    const pitch = 350 + Math.random() * 250; // Higher frequency than bulky mechanical keys
+    const pitch = 260 + Math.random() * 100; // Higher frequency than bulky mechanical keys
     const osc = this.ctx.createOscillator();
     const oscGain = this.ctx.createGain();
 
-    osc.type = 'sine'; // Pure sine for a clean, short dome "pop" rather than mechanical clack body
+    osc.type = 'triangle'; // Pure sine for a clean, short dome "pop" rather than mechanical clack body
     osc.frequency.setValueAtTime(pitch, now);
     osc.frequency.exponentialRampToValueAtTime(pitch * 0.7, now + 0.015);
 
@@ -557,11 +562,11 @@ class AudioEngine {
 
     const filter = this.ctx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.value = 220; // Cut off high frequency static completely
+    filter.frequency.value = 180; // Cut off high frequency static completely
     filter.Q.value = 1.0;
 
     const gainNode = this.ctx.createGain();
-    gainNode.gain.value = 0.15; // Much quieter background level to minimize overhead noise
+    gainNode.gain.value = 0.1; // Much quieter background level to minimize overhead noise
 
     brownSource.connect(filter);
     filter.connect(gainNode);
@@ -575,7 +580,7 @@ class AudioEngine {
       if (Math.random() > 0.6) {
         this.triggerDishClink(dest);
       }
-    }, 1500);
+    }, 2800);
     this.schedulers['cafe'] = timer;
   }
 
@@ -611,14 +616,15 @@ class AudioEngine {
     // Distant heavy low thunder scheduler
     const timer = setInterval(() => {
       // Thunder happens randomly every 20-30 seconds
-      if (Math.random() > 0.5) {
+      if (Math.random() > 0.35) {
         this.triggerThunderBoom(dest);
       }
-    }, 15000);
+    }, 8000);
     this.schedulers['thunder'] = timer;
   }
 
   public triggerThunderBoom(customDest?: AudioNode) {
+    if (this.isStoppingAll) return;
     if (!this.ctx || !this.buffers.brown) return;
     const target = customDest || this.soundGains['thunder'] || this.masterGain;
     if (!target) return;
@@ -844,11 +850,12 @@ class AudioEngine {
       if (Math.random() > 0.4) {
         this.triggerBirdChirpSeries(dest);
       }
-    }, 6000);
+    }, 4000);
     this.schedulers['birds'] = interval;
   }
 
   private triggerBirdChirpSeries(dest: AudioNode) {
+    if (this.isStoppingAll) return;
     if (!this.ctx) return;
     const now = this.ctx.currentTime;
     const chirpCount = 3 + Math.floor(Math.random() * 4);
@@ -857,22 +864,22 @@ class AudioEngine {
     for (let i = 0; i < chirpCount; i++) {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-      const startFreq = 2200 + Math.random() * 600;
-      const endFreq = startFreq + 1200 + Math.random() * 800;
+      const startFreq = 1400 + Math.random() * 400;
+      const endFreq = startFreq + 500 + Math.random() * 300;
 
       osc.type = 'sine';
       osc.frequency.setValueAtTime(startFreq, now + timeOffset);
       osc.frequency.exponentialRampToValueAtTime(endFreq, now + timeOffset + 0.06);
 
       gain.gain.setValueAtTime(0, now + timeOffset);
-      gain.gain.linearRampToValueAtTime(0.06, now + timeOffset + 0.005);
+      gain.gain.linearRampToValueAtTime(0.03, now + timeOffset + 0.01);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + timeOffset + 0.08);
 
       osc.connect(gain);
       gain.connect(dest);
 
       osc.start(now + timeOffset);
-      osc.stop(now + timeOffset + 0.1);
+      osc.stop(now + timeOffset + 0.05);
 
       timeOffset += 0.12 + Math.random() * 0.1;
     }
