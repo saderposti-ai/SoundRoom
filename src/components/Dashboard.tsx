@@ -244,16 +244,19 @@ export default function Dashboard({
         {/* Tab Contents */}
         <div className="p-4 sm:p-6 md:p-8">
           
-          {/* TAB 1: SOUNDS SCAPE SELECTORS */}
           {/* SOUNDS TAB */}
           {activeTab === 'sounds' && (
 
-            <div className="space-y-4">
+            <div className="space-y-5">
 
-              {/* CLEAR ALL BUTTON */}
-              {activeSounds.length > 0 && (
-                <div className="flex justify-end">
+              {/* TOP BAR */}
+              <div className="flex items-center justify-between">
 
+                <p className="text-xs text-gray-500 dark:text-white max-w-md leading-relaxed">
+                  Enable and layer multiple ambient channels. Each sound is generated procedurally in your browser to match the room atmosphere.
+                </p>
+
+                {activeSounds.length > 0 && (
                   <button
                     onClick={onClearAll}
                     className="
@@ -269,13 +272,14 @@ export default function Dashboard({
                       hover:bg-red-500/20
                       transition-all
                       cursor-pointer
+                      whitespace-nowrap
                     "
                   >
-                    Clear All Sounds
+                    Clear All
                   </button>
+                )}
 
-                </div>
-              )}
+              </div>
 
               {/* SOUND GRID */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
