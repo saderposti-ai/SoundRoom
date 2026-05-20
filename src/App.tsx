@@ -171,20 +171,24 @@ export default function App() {
     sendHeartbeat(roomId, mood, activeSounds, myCoords.x, myCoords.y);
   };
 
-  const handleSoundToggle = (id: SoundId, forceState?: boolean) => {
-    const isPlayingNow = audioEngine.toggleSound(id, forceState);
+  const handleSoundToggle = (id: SoundId, enabled: boolean) => {
+    if (enabled) {
+      setActiveSounds((prev) => [...prev, id]);
+      audioEngine.toggleSound(id, true);
+      audioEngine.triggerSingleKeyPress();
+    } else {
+      setActiveSounds((prev) =>
+        prev.filter((sound) => sound !== id)
+      );
+
+      // STOP SOUND COMPLETELY
+      audioEngine.toggleSound(id, false);
+
+      // extra safety
+      audioEngine.setSoundVolume(id, 0);
+    }
+  };
     
-    setActiveSounds((prev) => {
-      let nextList = [...prev];
-      if (isPlayingNow && !nextList.includes(id)) {
-        nextList.push(id);
-        // Sound toggle event click resonance tick
-        audioEngine.triggerSingleKeyPress();
-      } else if (!isPlayingNow && nextList.includes(id)) {
-        nextList = nextList.filter((x) => x !== id);
-      }
-      return nextList;
-    });
   };
 
   const handleSoundVolumeChange = (id: SoundId, volume: number) => {
@@ -193,10 +197,17 @@ export default function App() {
 
   const handleClearAll = () => {
     audioEngine.stopAll();
+
+    activeSounds.forEach((soundId) => {
+      audioEngine.toggleSound(soundId, false);
+      audioEngine.setSoundVolume(soundId, 0);
+    });
+
     setActiveSounds([]);
     setCurrentMood('cozy');
     audioEngine.setMood('cozy');
     setSelectedTheme('auto');
+
     sendHeartbeat(roomId, 'cozy', [], myCoords.x, myCoords.y);
   };
 
@@ -270,7 +281,7 @@ export default function App() {
             <h2 className="font-serif text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
               Room Noise
             </h2>
-            <p className="font-sans text-xs md:text-sm text-gray-500 dark:text-stone-100 leading-relaxed">
+            <p className="font-sans text-xs md:text-sm text-gray-500 leading-relaxed">
               Sit in a quiet shared digital room with strangers around the world. Layer procedural rain, fireplace snaps, train hums, and cozy synth pads to co-create a live collaborative soundscape.
             </p>
           </div>
