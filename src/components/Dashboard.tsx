@@ -7,15 +7,12 @@ import {
   Check,
   Flame
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { SOUND_DEFINITIONS, MOODS, MoodMetadata, ROOM_THEMES } from '../data';
-import { SoundId, MoodType, RoomThemeId, RoomState, PresenceOrb } from '../types';
+import { motion } from 'motion/react';
+import { SOUND_DEFINITIONS, ROOM_THEMES } from '../data';
+import { SoundId, MoodType, RoomThemeId, } from '../types';
 import { audioEngine } from '../audioEngine';
 
 interface DashboardProps {
-  roomState: RoomState;
-  orbs: PresenceOrb[];
-  currentMood: MoodType;
   onMoodChange: (m: MoodType) => void;
   activeSounds: SoundId[];
   onSoundToggle: (id: SoundId, state: boolean) => void;
@@ -23,24 +20,18 @@ interface DashboardProps {
   onClearAll: () => void;
   masterVolume: number;
   onMasterVolumeChange: (vol: number) => void;
-  roomId: string;
   activeThemeId: RoomThemeId;
-  selectedTheme: 'auto' | RoomThemeId;
-  onThemeChange: (themeId: 'auto' | RoomThemeId) => void;
+  selectedTheme: RoomThemeId;
+  onThemeChange: (themeId: RoomThemeId) => void;
 }
 
 export default function Dashboard({
-  roomState,
-  orbs,
-  currentMood,
-  onMoodChange,
   activeSounds,
   onSoundToggle,
   onSoundVolumeChange,
   onClearAll,
   masterVolume,
   onMasterVolumeChange,
-  roomId,
   activeThemeId,
   selectedTheme,
   onThemeChange
@@ -120,17 +111,6 @@ export default function Dashboard({
     }
   };
 
-  // Get active sound count of other players from room state
-  const getGlobalSoundPlayers = (id: SoundId) => {
-    return roomState.activeSounds?.[id] || 0;
-  };
-
-  // Safe accessor for mood category totals
-  const getMoodPercentage = (mId: MoodType) => {
-    const total = orbs.length || 1;
-    const moodCount = orbs.filter(o => o.mood === mId).length;
-    return Math.round((moodCount / total) * 100);
-  };
 
   const currentThemeDef = ROOM_THEMES.find(t => t.id === activeThemeId) || ROOM_THEMES[0];
 
@@ -159,7 +139,7 @@ export default function Dashboard({
             <Radio className="w-12 h-12 text-blue-400 mx-auto animate-ping" style={{ animationDuration: '3s' }} />
             <h3 className="font-serif text-2xl text-stone-100 tracking-tight">The Room goes Silent.</h3>
             <p className="font-sans text-sm text-stone-400 leading-relaxed">
-              Everyone online is listening to the stillness together for 10 seconds. Enjoy the collective breath.
+              A short silent pause lets the atmosphere breathe for a few seconds.
             </p>
             <div className="w-24 h-0.5 bg-neutral-800 mx-auto">
               <div className="h-full bg-blue-400 animate-shrink-progress" />
@@ -179,9 +159,8 @@ export default function Dashboard({
               <span>Room Noise</span>
               <span className="text-base select-none">{getDominantVibeSymbol()}</span>
             </h1>
-            <p className="text-[11px] font-mono text-gray-550 dark:text-stone-100 uppercase tracking-widest flex items-center gap-1.5">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              {orbs.length} {orbs.length === 1 ? 'soul' : 'souls'} listening dynamically
+            <p className="text-[11px] font-mono text-gray-550 dark:text-stone-100 uppercase tracking-widest">
+              Personal ambient soundscape
             </p>
           </div>
         </div>
@@ -289,7 +268,7 @@ export default function Dashboard({
                 {SOUND_DEFINITIONS.map((sound) => {
                   const isActive = activeSounds.includes(sound.id);
                   const currentVol = soundVolumes[sound.id] ?? audioEngine.getSoundVolume(sound.id);
-                  const activePeeps = getGlobalSoundPlayers(sound.id);
+              
 
 
                   return (
@@ -313,11 +292,7 @@ export default function Dashboard({
                           <div className="min-w-0 flex-1">
                             <h3 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-1.5">
                               <span>{sound.label}</span>
-                              {activePeeps > 0 && (
-                                <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full bg-[var(--theme-accent)]/20 text-[var(--theme-accent)] dark:text-white animate-pulse theme-transition shadow-sm">
-                                  {activePeeps} playing
-                                </span>
-                              )}
+                              
                             </h3>
                           </div>
                         </div>
@@ -416,36 +391,18 @@ export default function Dashboard({
               <div className="space-y-1">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-1.5">
                   <span>Atmosphere Vibe Controller</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--theme-accent)]/15 text-[var(--theme-accent)] font-mono uppercase tracking-wider theme-transition font-bold">Realtime Link</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--theme-accent)]/15 text-[var(--theme-accent)] font-mono uppercase tracking-wider theme-transition font-bold">
+                    Theme Presets
+                  </span>
                 </h3>
                 <p className="text-xs text-gray-400 dark:text-white leading-relaxed">
-                  Choose an atmospheric preset below or select Auto Sync to let the entire interface gradually transition based on the room's dynamic mood.
+                  ChooChoose an atmospheric preset to customize the mood and lighting of your personal space.
                 </p>
               </div>
 
               {/* Grid of Atmosphere Themes */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
-                {/* AUTO SYNC BUTTON */}
-                <button
-                  onClick={() => onThemeChange('auto')}
-                  className={`p-4 rounded-2xl flex flex-col items-start text-left border transition-all duration-300 relative cursor-pointer group ${
-                    selectedTheme === 'auto'
-                      ? 'bg-[var(--theme-card-bg)] border-[var(--theme-accent)] border-2 shadow-md translate-y-[-2px] theme-transition'
-                      : 'bg-black/5 border-black/5 dark:bg-white/[0.04] dark:border-white/10 text-gray-700 dark:text-white hover:bg-black/8 dark:hover:bg-white/8 hover:border-[var(--theme-accent)]/35'
-                  }`}
-                  style={selectedTheme === 'auto' ? { boxShadow: 'var(--theme-glow)' } : undefined}
-                >
-                  <div className="flex items-center space-x-2 w-full">
-                    <span className="text-2.5xl animate-spin text-[var(--theme-accent)]" style={{ animationDuration: '6s' }}>🔄</span>
-                    <span className="text-xs font-bold uppercase tracking-wider">Collective Sync</span>
-                  </div>
-                  <p className="text-[10px] text-gray-550 dark:text-white mt-2 leading-relaxed flex-1">
-                    Continuously syncs design variables, lighting patterns, and floating particles matching the dominant vibe of everyone present.
-                  </p>
-                  {selectedTheme === 'auto' && (
-                    <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-[var(--theme-accent)] animate-ping" />
-                  )}
-                </button>
+                
 
                 {ROOM_THEMES.map((theme) => {
                   const isThemeSelected = selectedTheme === theme.id;
@@ -491,7 +448,7 @@ export default function Dashboard({
 
       {/* Floating helpful user guide footer */}
       <footer className="text-center mt-6 text-[11px] text-gray-400 dark:text-white hover:text-gray-500 dark:hover:text-white transition-colors font-sans select-none leading-relaxed">
-        We are sitting together. Hover over any floating presence orb to read their mood, location, and what sounds they have toggled.
+        Layer ambient sounds, adjust volumes, and create your perfect atmosphere.
       </footer>
     </div>
   );
