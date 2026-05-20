@@ -289,7 +289,7 @@ export default function Dashboard({
                   const currentVol = audioEngine.getSoundVolume(sound.id);
                   const activePeeps = getGlobalSoundPlayers(sound.id);
 
-                  
+
                   return (
                     <motion.div
                       key={sound.id}
@@ -394,7 +394,7 @@ export default function Dashboard({
 
               </div>
             </div>
-           </div>
+           
           )}
 
 
