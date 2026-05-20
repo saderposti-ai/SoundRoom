@@ -49,6 +49,8 @@ export default function Dashboard({
   const [isMuted, setIsMuted] = useState(false);
   const [savedMasterVolume, setSavedMasterVolume] = useState(masterVolume);
 
+  const [soundVolumes, setSoundVolumes] = useState<Record<string, number>>({});
+
   // Radio Moment countdown state
   const [radioCountdown, setRadioCountdown] = useState<number | null>(null);
   const [isRadioSilent, setIsRadioSilent] = useState(false);
@@ -286,7 +288,7 @@ export default function Dashboard({
               
                 {SOUND_DEFINITIONS.map((sound) => {
                   const isActive = activeSounds.includes(sound.id);
-                  const currentVol = 0.8;
+                  const currentVol = soundVolumes[sound.id] ?? audioEngine.getSoundVolume(sound.id);
                   const activePeeps = getGlobalSoundPlayers(sound.id);
 
 
@@ -378,7 +380,16 @@ export default function Dashboard({
                               max="1"
                               step="0.05"
                               value={currentVol}
-                              onChange={(e) => onSoundVolumeChange(sound.id, parseFloat(e.target.value))}
+                              onChange={(e) => {
+                                const vol = parseFloat(e.target.value);
+
+                                setSoundVolumes((prev) => ({
+                                  ...prev,
+                                  [sound.id]: vol
+                                }));
+
+                                onSoundVolumeChange(sound.id, vol);
+                              }}
                               className="premium-slider w-full cursor-pointer focus:outline-none"
                               title={`${sound.label} volume`}
                             />
