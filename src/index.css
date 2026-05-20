@@ -26,6 +26,60 @@
   animation: float-delayed 18s ease-in-out infinite;
 }
 
+/* PREMIUM RANGE SLIDER */
+
+.premium-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(120, 120, 120, 0.2);
+  outline: none;
+}
+
+/* WEBKIT */
+
+.premium-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+
+  background: var(--theme-accent);
+
+  border: 2px solid white;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+
+  box-shadow:
+    0 0 10px rgba(0,0,0,0.15);
+}
+
+.premium-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+/* FIREFOX */
+
+.premium-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+
+  background: var(--theme-accent);
+
+  border: 2px solid white;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 0 10px rgba(0,0,0,0.15);
+}
+
 /* Twinkling stars effect for cozy night hours */
 .stars-layer-1, .stars-layer-2 {
   position: absolute;
