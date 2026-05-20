@@ -326,7 +326,7 @@ class AudioEngine {
 
     this.isStoppingAll = false;
   }
-  }
+  
 
   // --- Synthesis Models utilizing native nodes and buffers ---
 
