@@ -256,7 +256,7 @@ export default function Dashboard({
                   Enable and layer multiple ambient channels. Each sound is generated procedurally in your browser to match the room atmosphere.
                 </p>
 
-                {activeSounds.length > 0 && (
+                
                   <button
                     onClick={onClearAll}
                     className="
@@ -277,7 +277,7 @@ export default function Dashboard({
                   >
                     Clear All
                   </button>
-                )}
+                
 
               </div>
 
