@@ -854,11 +854,12 @@ class AudioEngine {
     if (!this.ctx) return;
 
     // Birds chirp schedule
+    this.triggerBirdChirpSeries(dest);
     const interval = setInterval(() => {
       if (Math.random() > 0.4) {
         this.triggerBirdChirpSeries(dest);
       }
-    }, 4000);
+    }, 3000);
     this.schedulers['birds'] = interval;
   }
 

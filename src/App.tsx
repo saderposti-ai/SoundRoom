@@ -277,7 +277,7 @@ export default function App() {
             <div className="w-14 h-14 mx-auto rounded-3xl bg-[var(--theme-accent)]/10 flex items-center justify-center text-[var(--theme-accent)] border border-[var(--theme-accent)]/10 animate-fade-in theme-transition">
               <Radio className="w-7 h-7 animate-pulse text-[var(--theme-accent)]" />
             </div>
-            <h2 className="font-serif text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
+            <h2 className="font-serif text-3xl font-extrabold tracking-tight text-gray-900 leading-tight">
               Room Noise
             </h2>
             <p className="font-sans text-xs md:text-sm text-gray-500 leading-relaxed">
@@ -298,7 +298,7 @@ export default function App() {
             </button>
           </div>
 
-          <footer className="pt-2 flex items-center justify-center gap-1.5 text-stone-500 dark:text-stone-200 text-[10px] font-mono uppercase tracking-widest">
+          <footer className="pt-2 flex items-center justify-center gap-1.5 text-stone-500 text-[10px] font-mono uppercase tracking-widest">
             {isSimulationMode ? (
               <span className="text-[var(--theme-accent)] flex items-center gap-1 theme-transition">
                 <ShieldAlert className="w-3.5 h-3.5" /> Simulation Mode Active
