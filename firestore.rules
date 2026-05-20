@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global Safety Net (default-deny catch-all)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidRoomState(data) {
+      return data.keys().hasAll(['user_count', 'mood_counts', 'active_sounds', 'updatedAt'])
+        && data.keys().size() == 4
+        && data.user_count is number
+        && data.mood_counts is map
+        && data.active_sounds is map
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidMessage(data) {
+      return data.keys().hasAll(['text', 'mood', 'userCountry', 'createdAt'])
+        && data.keys().size() == 4
+        && data.text is string && data.text.size() <= 70
+        && data.mood is string && data.mood.size() <= 30
+        && data.userCountry is string && data.userCountry.size() <= 50
+        && data.createdAt is timestamp;
+    }
+
+    function isValidPresence(data) {
+      return data.keys().hasAll(['mood', 'country', 'activeSounds', 'x', 'y', 'lastActive'])
+        && data.keys().size() == 6
+        && data.mood is string && data.mood.size() <= 30
+        && data.country is string && data.country.size() <= 50
+        && data.activeSounds is list && data.activeSounds.size() <= 20
+        && data.x is number && data.x >= 0 && data.x <= 100
+        && data.y is number && data.y >= 0 && data.y <= 100
+        && data.lastActive is timestamp;
+    }
+
+    // Collection rule matchers
+    match /rooms/{roomId} {
+      allow get, list: if isValidId(roomId);
+      allow create, update: if isValidId(roomId) && isValidRoomState(request.resource.data);
+      allow delete: if false; // Room structures are permanent
+
+      match /messages/{messageId} {
+        allow get, list: if isValidId(roomId) && isValidId(messageId);
+        allow create: if isValidId(roomId) && isValidId(messageId) && isValidMessage(request.resource.data) && request.resource.data.createdAt == request.time;
+        allow update, delete: if false; // Messages are immutable, once written they drift and clean up
+      }
+
+      match /presences/{presenceId} {
+        allow get, list: if isValidId(roomId) && isValidId(presenceId);
+        allow create, update: if isValidId(roomId) && isValidId(presenceId) && isValidPresence(request.resource.data) && request.resource.data.lastActive == request.time;
+        allow delete: if isValidId(roomId) && isValidId(presenceId); // Users can clean up their presence on exit
+      }
+    }
+  }
+}

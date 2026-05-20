@@ -1,0 +1,101 @@
+{
+  "entities": {
+    "room_state_entity": {
+      "title": "Room State",
+      "description": "Global state for a shared workspace room, tracking aggregate counts of active sounds and active user moods.",
+      "type": "object",
+      "properties": {
+        "user_count": {
+          "type": "number",
+          "description": "Number of users currently inside this room."
+        },
+        "mood_counts": {
+          "type": "object",
+          "description": "A map of mood identifiers to active count of users."
+        },
+        "active_sounds": {
+          "type": "object",
+          "description": "A map of sound IDs to active counts."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the last modification."
+        }
+      },
+      "required": ["user_count", "mood_counts", "active_sounds", "updatedAt"]
+    },
+    "message_entity": {
+      "title": "Ambient Message",
+      "description": "A temporary short text post left by a user in the room that drifts across the screen and fades away.",
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The message text limit of 70 characters."
+        },
+        "mood": {
+          "type": "string",
+          "description": "Author user current mood designation."
+        },
+        "userCountry": {
+          "type": "string",
+          "description": "Inferred or estimated random aesthetic country name for lofi vibe."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of when the message was posted."
+        }
+      },
+      "required": ["text", "mood", "userCountry", "createdAt"]
+    },
+    "presence_entity": {
+      "title": "User Presence",
+      "description": "Realtime heartbeat document for a single connected anonymous user tab.",
+      "type": "object",
+      "properties": {
+        "mood": {
+          "type": "string",
+          "description": "The user current mood selection."
+        },
+        "country": {
+          "type": "string",
+          "description": "Aesthetic country or location of the user."
+        },
+        "activeSounds": {
+          "type": "array",
+          "description": "List of sound IDs currently toggled active by this user."
+        },
+        "x": {
+          "type": "number",
+          "description": "Visual coordinate x percentage (0 - 100) for screen floating orb rendering."
+        },
+        "y": {
+          "type": "number",
+          "description": "Visual coordinate y percentage (0 - 100) for screen floating orb rendering."
+        },
+        "lastActive": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of active presence heartbeat."
+        }
+      },
+      "required": ["mood", "country", "activeSounds", "x", "y", "lastActive"]
+    }
+  },
+  "firestore": {
+    "/rooms/{roomId}": {
+      "schema": "room_state_entity",
+      "description": "Shared rooms. We default to a global room named 'cozy-lounge'."
+    },
+    "/rooms/{roomId}/messages/{messageId}": {
+      "schema": "message_entity",
+      "description": "Short ambient drift comments created by players in the room."
+    },
+    "/rooms/{roomId}/presences/{presenceId}": {
+      "schema": "presence_entity",
+      "description": "Individual live heartbeat records for online users."
+    }
+  }
+}

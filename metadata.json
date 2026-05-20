@@ -1,0 +1,6 @@
+{
+  "name": "Room Noise",
+  "description": "An immersive, collaborative ambient soundscape where users from around the world co-create calming live atmospheres together.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
