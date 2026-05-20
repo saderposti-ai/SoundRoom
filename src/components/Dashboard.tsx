@@ -213,7 +213,7 @@ export default function Dashboard({
             onClick={() => setActiveTab('themes')}
             className={`flex-1 py-4 text-xs font-semibold uppercase tracking-widest font-sans flex items-center justify-center space-x-2 transition-all cursor-pointer ${
               activeTab === 'themes'
-                ? 'text-gray-950 dark:text-white border-b-2 border-[var(--theme-accent)] font-bold'
+                ? 'text-gray-950 border-b-2 border-[var(--theme-accent)] font-bold'
                 : 'text-gray-500 hover:text-gray-800'
             }`}
           >
@@ -290,7 +290,7 @@ export default function Dashboard({
                         >
                           <span className="text-2xl flex-shrink-0 select-none">{sound.emoji}</span>
                           <div className="min-w-0 flex-1">
-                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-1.5">
+                            <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
                               <span>{sound.label}</span>
                               
                             </h3>
