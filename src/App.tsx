@@ -188,8 +188,7 @@ export default function App() {
       audioEngine.setSoundVolume(id, 0);
     }
   };
-    
-  };
+  
 
   const handleSoundVolumeChange = (id: SoundId, volume: number) => {
     audioEngine.setSoundVolume(id, volume);
