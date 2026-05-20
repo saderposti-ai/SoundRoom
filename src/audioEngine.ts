@@ -262,48 +262,53 @@ class AudioEngine {
     }
   }
 
-  public stopAll() {
+  public async stopAll() {
     this.isStoppingAll = true;
-    // 1. Clear all intervals and timeouts
+
+    // Clear all schedulers
     Object.keys(this.schedulers).forEach((key) => {
       const scheduler = this.schedulers[key];
-      if (scheduler) {
-        clearInterval(scheduler as any);
-        clearTimeout(scheduler as any);
-      }
+
+      clearInterval(scheduler as any);
+      clearTimeout(scheduler as any);
     });
+
     this.schedulers = {};
 
-    // 2. Stop and disconnect all nodes immediately without waiting for timeouts
+    // Stop all active nodes
     Object.keys(this.activeNodes).forEach((soundKey) => {
       const nodes = this.activeNodes[soundKey] || [];
+
       nodes.forEach((node) => {
-        try { node.stop(); } catch (e) {}
-        try { node.disconnect(); } catch (e) {}
+        try { node.stop?.(0); } catch (e) {}
+        try { node.disconnect?.(); } catch (e) {}
       });
+
       this.activeNodes[soundKey] = [];
     });
 
-    // 3. Disconnect all gain nodes
+    // Disconnect all gains
     Object.keys(this.soundGains).forEach((soundKey) => {
       const id = soundKey as SoundId;
-      const gainNode = this.soundGains[id];
-      if (gainNode) {
-        try {
-          gainNode.gain.cancelScheduledValues(this.ctx?.currentTime || 0);
-          gainNode.gain.setValueAtTime(0, this.ctx?.currentTime || 0);
-        } catch (e) {}
-        try {
-          gainNode.disconnect();
-        } catch (e) {}
-        this.soundGains[id] = null;
-      setTimeout(() => {
-        this.isStoppingAll = false;
-      }, 100);
-      }
+
+      try {
+        this.soundGains[id]?.disconnect();
+      } catch (e) {}
+
+      this.soundGains[id] = null;
     });
 
-    // 4. Reset volume settings back to original defaults
+    // HARD RESET AUDIO CONTEXT
+    if (this.ctx) {
+      try {
+        await this.ctx.close();
+      } catch (e) {}
+    }
+
+    this.ctx = null;
+    this.masterGain = null;
+
+    // Reset defaults
     this.currentVolumeSettings = {
       rain: 0.5,
       keyboard: 0.4,
@@ -318,6 +323,9 @@ class AudioEngine {
       white_noise: 0.3,
       soft_music: 0.6
     };
+
+    this.isStoppingAll = false;
+  }
   }
 
   // --- Synthesis Models utilizing native nodes and buffers ---
